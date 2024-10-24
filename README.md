@@ -2,7 +2,7 @@
 
 The aim of this repository is to create a simple and easy to use docker container with minimal setup to run your own Tailscale DERP server.  
 
-There is two parts to the container, the tailscale client itself and the DERP server. The tailscale client is used to connect the container to your tailnet as it's own device, this allows the --verify-clients argument to be set on the derp server, this is so only devices in your own tailnet can use the DERP server, allowing it to the open internet in my opinion is a bad idea. 
+There is two parts to the container, the tailscale client itself and the DERP server. The tailscale client is used to connect the container to your tailnet as it's own device, this allows the --verify-clients argument to be set on the derp server, this is so only devices in your own tailnet can use the DERP server, allowing it to the open internet in my opinion is a bad idea.
 
 Placing this DERP server at a closer geolocation than the default DERP servers to all of your devices can and will be beneficial for connections speeds between your devices that can't make a direct connection or at least struggle too.  
 
@@ -17,6 +17,7 @@ The container was built and tested on Ubuntu 22 5.19.0-28-generic. It's docker s
 The container is setup to pull the latest version of the DERPER application and the latest version of Tailscale each time you build the container.
 
 To rebuild with the latest version simple run the following commands
+
 ```bash
 docker rmi tailscale-derp-docker:1.0
 docker build . -t tailscale-derp-docker:1.0
@@ -27,15 +28,18 @@ docker build . -t tailscale-derp-docker:1.0
 If you don't want to build the container, you can simply using the pre-built container I have added to the github container registry.
 
 Using the docker-compose.yml file, simply change this line
+
 ```
 image: tailscale-derp-docker:1.0
 ```
+
 To the following,
+
 ```
-image: ghcr.io/tijjjy/tailscale-derp-docker:latest
+image: froggy111/tailscale-derp-docker:latest
 ```
 
-There is a github actions workflow setup to build and publish a new container every roughly every 10 days so the tailscale version will be matching whichever version is available here https://pkgs.alpinelinux.org/package/edge/community/x86/tailscale
+There is a github actions workflow setup to build and publish a new container every roughly every 10 days so the tailscale version will be matching whichever version is available here <https://pkgs.alpinelinux.org/package/edge/community/x86/tailscale>
 
 # Instructions
 
@@ -68,10 +72,13 @@ TAILSCALE_AUTH_KEY="ENTER YOUR TAILSCALE AUTH KEY HERE"
 ```
 
 ### Building Docker Image
+
 ```
 docker build . -t tailscale-derp-docker:1.0
 ```
+
 ### Starting the image
+
 ```
 docker compose up -d
 ```
@@ -89,22 +96,22 @@ docker logs -f tailscale-derp
 Once your Tailscale DERP server is operational and you can see the new device in the devices section of the Tailscale admin console, You need to change your ACL to only allow the use of your DERP server and omit out the default Tailscale servers. This can be done by adding the following config at the bottom of your ACL file.
 
 ```
-	"derpMap": {
-		"OmitDefaultRegions": true,
-		"Regions": {
-			"900": {
-				"RegionID":   900,
-				"RegionCode": "myderpserver",
-				"Nodes": [
-					{
-						"Name":     "1",
-						"RegionID": 900,
-						"HostName": "derp.example.com",
-					},
-				],
-			},
-		},
-	},
+ "derpMap": {
+  "OmitDefaultRegions": true,
+  "Regions": {
+   "900": {
+    "RegionID":   900,
+    "RegionCode": "myderpserver",
+    "Nodes": [
+     {
+      "Name":     "1",
+      "RegionID": 900,
+      "HostName": "derp.example.com",
+     },
+    ],
+   },
+  },
+ },
 ```
 
 More information can be found here [Tailscale DERP server docs](https://tailscale.com/kb/1118/custom-derp-servers/) on setting this config.  

@@ -17,6 +17,7 @@ services:
       - TAILSCALE_DERP_VERIFY_CLIENTS=true
       - TAILSCALE_DERP_CERTMODE=letsencrypt
       - TAILSCALE_LOGIN_SERVER=headscale.example.com
+      - TAILSCALE_AUTH_KEY=<your_tailscale_auth_key>
     ports:
       - 80:80/tcp
       - 443:443/tcp
